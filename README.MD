@@ -26,6 +26,18 @@ apt-get update
 apt-get install -y kubelet kubeadm kubectl
 
 ```
+
+### 把swap禁掉
+如果出現
+```
+[ERROR Swap]: running with swap on is not supported. Please disable swap
+[preflight] If you know what you are doing, you can make a check non-fatal with `--ignore-preflight-errors=...`
+```
+disable swap
+```
+sudo swapoff -a
+```
+
 ## Try kubeadm
 ### Create Master a node
 ```
@@ -42,6 +54,13 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 kubectl get nodes
 ```
 
+You must install a pod network add-on so that your pods can communicate with each other.
+
+The network must be deployed before any applications. Also, CoreDNS will not start up before a network is installed. kubeadm only supports Container Network Interface (CNI) based networks (and does not support kubenet).
+```
+kubectl apply -f https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
+kubectl apply -f https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
+```
 
 ### Trouble shooting
 ```
